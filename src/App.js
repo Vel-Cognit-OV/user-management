@@ -1,10 +1,20 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import './App.css';
 
 function AddForm(props){
   const[pName, setPName] = useState(props.playerName);
   const[tName, setTName] = useState(props.teamName);
-  let pd={};
+
+
+  const[dataRow,settdataRow] = useState([]);
+
+  const[msg,setMsg]= useState("");
+
+  useEffect(()=>{
+    setMsg("Alert Msgg");
+    setTimeout(()=>setMsg(""),3000)
+  },[dataRow]);
+
   function onChangeName(a){
     setPName(a.target.value);
   }
@@ -12,10 +22,12 @@ function AddForm(props){
     setTName(a.target.value);
   }
   function createPlayer(){
-    pd = {"PlayerName":pName, "TeamName":tName}
-    //props.getData(pd);
-    console.log("vel-test " + pd.PlayerName)
+    let pd = {"PlayerName":pName, "TeamName":tName};
+   let newRows=[...dataRow,pd];
+   settdataRow(newRows);
+
   }
+
   return(
     <>
       <div>
@@ -29,20 +41,22 @@ function AddForm(props){
           <input type="submit" value="+ Create" onClick={createPlayer}/>
         </span>
       </div>
-      
+      <span style={{}}>{msg}</span>
       <table border={"1"} width={"100%"} style={{marginTop:"50px"}}>
         <tr>
-          <td>S No</td>
-          <td>Player Name</td>
-          <td>Team Name</td>
-          <td>Action</td>
+          <th>S No</th>
+          <th>Player Name</th>
+          <th>Team Name</th>
+          <th>Action</th>
         </tr>
-        <tr>
+        {dataRow.map((rowItem)=>(
+          <tr>
           <td>1</td>
-          <td>{pd.PlayerName}</td>
-          <td>{pd.TeamName}</td> 
+          <td>{rowItem.PlayerName}</td>
+          <td>{rowItem.TeamName}</td> 
           <td></td>
         </tr>
+        ))}
       </table>
 
     </>
@@ -50,23 +64,6 @@ function AddForm(props){
   );
 }
 
-// function UserList(){
-//   return(
-//     <>
-//       <table border={"1"} width={"100%"} style={{marginTop:"50px"}}>
-//         <tr>
-//           <td>S No</td>
-//           <td>Player Name</td>
-//           <td>Team Name</td>
-//           <td>Action</td>
-//         </tr>
-//         <tr>
-//           <td>{}</td>
-//         </tr>
-//       </table>
-//     </>
-//   )
-// }
 
 function App() {
   function addPlayer(data){
